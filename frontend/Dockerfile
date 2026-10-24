@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # ---------------------------------------------------------
 # Stage 1: Build Vue SPA Application
 # Base image locked to specific tag node:20-alpine
