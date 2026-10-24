@@ -41,15 +41,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Install Composer Dependencies
-        working-directory: backend
-        run: composer install --prefer-dist --no-interaction --no-progress
-
       - name: Prepare Environment File
         working-directory: backend
         run: |
           cp .env.example .env
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Install Composer Dependencies
+        working-directory: backend
+        run: composer install --no-scripts --prefer-dist --no-interaction --no-progress
+
+      - name: Generate Application Key and Discover Packages
+        working-directory: backend
+        run: |
           php artisan key:generate --ansi
+          php artisan package:discover --ansi
 
       - name: Run Backend Feature & Unit Tests
         working-directory: backend
