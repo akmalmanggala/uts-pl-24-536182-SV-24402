@@ -60,20 +60,10 @@
             <span v-else>Masuk ke Akun Roastery</span>
           </button>
         </form>
-
-        <div class="quick-creds">
-          <span class="badge-hint">Kredensial Default Roaster:</span>
-          <p>Email: <code>admin@kopinusantara.id</code></p>
-          <p>Password: <code>password123</code></p>
-          <button @click="fillSampleCredentials" class="btn-auto-fill" type="button">
-            Gunakan Kredensial Ini
-          </button>
-        </div>
       </div>
 
-      <div class="academic-footer">
-        <p><strong>Akmal Manggala Putra</strong> (24/536182/SV/24402) - Kelas PLBB</p>
-        <p>Praktikum Konstruksi & Evolusi Perangkat Lunak - UTS 2026</p>
+      <div class="login-footer">
+        <p>&copy; 2026 Kopi Nusantara Roastery &bull; Specialty Inventory Management System</p>
       </div>
     </div>
   </div>
@@ -90,11 +80,6 @@ const email = ref('admin@kopinusantara.id');
 const password = ref('password123');
 const loading = ref(false);
 const errorMessage = ref('');
-
-const fillSampleCredentials = () => {
-  email.value = 'admin@kopinusantara.id';
-  password.value = 'password123';
-};
 
 const handleLogin = async () => {
   loading.value = true;
@@ -280,56 +265,10 @@ const handleLogin = async () => {
   cursor: not-allowed;
 }
 
-.quick-creds {
-  margin-top: 22px;
-  padding-top: 18px;
-  border-top: 1px dashed #e6ded5;
-  font-size: 12px;
-  color: #635245;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.badge-hint {
-  font-weight: 700;
-  color: #a65820;
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-}
-
-code {
-  background: #f1eae2;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 12px;
-}
-
-.btn-auto-fill {
-  margin-top: 8px;
-  background: none;
-  border: 1px solid #cbbaa8;
-  color: #724218;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: all 0.2s;
-}
-
-.btn-auto-fill:hover {
-  background: #f5ebe0;
-  border-color: #a65820;
-}
-
-.academic-footer {
+.login-footer {
   text-align: center;
-  font-size: 11px;
-  color: #8e7c6d;
+  font-size: 12px;
+  color: #a89484;
   line-height: 1.5;
 }
 
