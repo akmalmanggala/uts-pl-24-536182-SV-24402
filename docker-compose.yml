@@ -1,0 +1,79 @@
+services:
+  # -------------------------------------------------------------
+  # 1. Database Service (MySQL 8.0 with Persistent Named Volume)
+  # -------------------------------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: uts-kopi-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_kopi_secret}
+      MYSQL_DATABASE: ${DB_DATABASE:-kopi_db}
+      MYSQL_USER: ${DB_USERNAME:-kopi_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-kopi_secret_pass}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - kopi-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_kopi_secret"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # -------------------------------------------------------------
+  # 2. Backend Service (FrankenPHP Application Server - Bonus +10)
+  # -------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: uts-kopi-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: "${APP_NAME:-Kopi Nusantara API}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_KEY: "${APP_KEY:-base64:7K5pI0hL8Z2PqM9V5bB3cN4eE6fG7hH8jJ9kL0mN1oP=}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "${APP_URL:-http://localhost:8000}"
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-kopi_db}
+      DB_USERNAME: ${DB_USERNAME:-kopi_user}
+      DB_PASSWORD: ${DB_PASSWORD:-kopi_secret_pass}
+      RUN_MIGRATIONS: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - kopi-network
+
+  # -------------------------------------------------------------
+  # 3. Frontend Service (Vue.js SPA served with Nginx Alpine)
+  # -------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000/api}
+    container_name: uts-kopi-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - kopi-network
+
+networks:
+  kopi-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    name: uts_kopi_db_data
