@@ -26,7 +26,7 @@ COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # Layer Caching: Copy composer definitions first to maximize Docker cache
-COPY composer.json ./
+COPY composer.json composer.lock* ./
 
 # Install dependencies (no dev, optimize autoloader)
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-reqs
