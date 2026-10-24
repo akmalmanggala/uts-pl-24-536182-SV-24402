@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 # ---------------------------------------------------------
 # Backend Dockerfile using FrankenPHP (Bonus +10)
 # Base image locked to specific tag dunglas/frankenphp:1.4-php8.3-alpine
@@ -9,16 +8,8 @@ FROM dunglas/frankenphp:1.4-php8.3-alpine
 ENV SERVER_NAME=":8000"
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Install required PHP extensions & utilities
-RUN install-php-extensions \
-    pdo_mysql \
-    bcmath \
-    zip \
-    pcntl \
-    intl \
-    opcache
-
-RUN apk add --no-cache netcat-openbsd
+# Install required PHP extensions for MySQL & Laravel
+RUN install-php-extensions pdo_mysql bcmath pcntl opcache
 
 # Install composer from official composer image
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
