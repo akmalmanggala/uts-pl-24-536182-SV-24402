@@ -8,8 +8,9 @@ FROM dunglas/frankenphp:1.4-php8.3-alpine
 ENV SERVER_NAME=":8000"
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Install required PHP extensions for MySQL & Laravel
-RUN install-php-extensions pdo_mysql bcmath pcntl opcache
+# Install curl for container healthcheck probe & required PHP extensions for MySQL & Laravel
+RUN apk add --no-cache curl && \
+    install-php-extensions pdo_mysql bcmath pcntl opcache
 
 # Install composer from official composer image
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
@@ -31,7 +32,7 @@ RUN composer dump-autoload --optimize --no-dev
 # Copy custom Caddyfile and entrypoint script
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Storage permissions
 RUN mkdir -p /app/storage /app/bootstrap/cache && \

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\HealthCheckController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,3 +11,5 @@ Route::get('/', function () {
         'status'  => 'Active',
     ]);
 });
+
+Route::get('/health', [HealthCheckController::class, 'check'])->name('web.health');
