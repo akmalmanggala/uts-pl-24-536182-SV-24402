@@ -154,4 +154,23 @@ class CoffeeApiTest extends TestCase
             'id' => $coffee->id,
         ]);
     }
+
+    /**
+     * Test 6: Health check endpoint returns 200 and healthy status.
+     */
+    public function test_health_check_endpoint_returns_healthy(): void
+    {
+        $response = $this->getJson('/api/health');
+
+        $response->assertStatus(200)
+            ->assertJsonPath('status', 'healthy')
+            ->assertJsonStructure([
+                'status',
+                'timestamp',
+                'services' => [
+                    'database' => ['status', 'connection'],
+                    'cache' => ['status', 'driver'],
+                ],
+            ]);
+    }
 }
