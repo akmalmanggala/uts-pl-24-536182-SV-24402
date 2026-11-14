@@ -1,0 +1,12 @@
+groups:
+  - name: application_monitoring_alerts
+    rules:
+      - alert: ServiceInstanceDown
+        expr: up == 0
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Layanan {{ $labels.job }} ({{ $labels.instance }}) terdeteksi DOWN"
+          description: "Target monitoring {{ $labels.job }} pada instance {{ $labels.instance }} tidak merespons scrape metrik Prometheus selama lebih dari 15 detik."
+          action: "Segera buka terminal host, jalankan perintah 'docker compose logs {{ $labels.job }}' untuk menganalisis error, dan lakukan pemulihan layanan menggunakan 'docker compose start {{ $labels.job }}'."
